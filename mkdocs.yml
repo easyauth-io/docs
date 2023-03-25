@@ -19,16 +19,17 @@ theme:
       toggle:
         icon: material/toggle-switch-off-outline 
         name: Switch to dark mode
-      # primary: teal
-      # accent: purple 
     - scheme: slate 
       toggle:
         icon: material/toggle-switch
         name: Switch to light mode    
-      # primary: teal
-      # accent: lime
+      primary: teal
+      accent: lime
+  logo: assets/easyauthlogolight_small.png
+  favicon: assets/favicon.png
 
 extra:
+  homepage: https://easyauth.io
   social:
     - icon: fontawesome/brands/github-alt
       link: http://github.com/easyauth-io
@@ -36,6 +37,9 @@ extra:
     #   link: https://twitter.com/TheJamesWillett
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/company/easyauthio
+
+extra_css:
+  - stylesheets/extra.css
 
 markdown_extensions:
   - pymdownx.highlight:
@@ -50,6 +54,7 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.mark
   - attr_list
+  - md_in_html
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg

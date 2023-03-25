@@ -1,17 +1,15 @@
-# Welcome to MkDocs
+# EasyAuth Documentation
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+EasyAuth provides end-to-end user authentication and user management that can be set up in minutes.
 
-## Commands
+## Quickstart Tutorials
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
 
-## Project layout
+<div class="grid cards" markdown>
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+- :simple-spring: __Java Spring Boot__
+- :simple-javascript: __JavaScript__
+- :simple-react: __React__
+- :material-nodejs: __Node Express__
+
+</div>
