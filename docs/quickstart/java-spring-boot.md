@@ -14,15 +14,13 @@ Learn how to authenticate users in a Java Spring Boot application using EasyAuth
 	
 	4. Edit the `src/main/resources/application.properties` file and set the values from your 'Registered Client' that you created in step 1 in place of the curly braces - {}.
 	
-	5. Also edit `line 27 & 28` of `src/main/java/com/easyauth/easyAuthExample/controller/UserRestController.java` providing the correct values in place of the curly braces - {}.
-	
-	6. Run the project and visit [http://127.0.0.1:8080](http://127.0.0.1:8080){target=_blank}
+	5. Run the project and visit [http://127.0.0.1:8080](http://127.0.0.1:8080){target=_blank}
 
 ## 1. Create a new Spring Boot Application	
 
 Generate a new spring boot web project from [https://start.spring.io](https://start.spring.io){target=_blank}.
 
-Add the `spring-boot-starter-oauth2-client` starter in `pom.xml` file of the your Maven project, it provides all the necessary dependencies required to authenticate your application.
+Add the `spring-boot-starter-oauth2-client` starter in `pom.xml` file of your Maven project, it provides all the necessary dependencies required to authenticate your application.
 
 ``` xml title="pom.xml"
 <dependencies>
@@ -63,6 +61,9 @@ spring.security.oauth2.client.provider.easyauth.authorization-uri=https://{your_
 spring.security.oauth2.client.provider.easyauth.token-uri=https://{your_subdomain}.app.easyauth.io/tenantbackend/oauth2/token
 spring.security.oauth2.client.provider.easyauth.redirect-uri={Redirect Uri such as http://127.0.0.1:8080/login/oauth2/code/easyauth}
 spring.security.oauth2.client.provider.easyauth.user-info-uri=https://{your_subdomain}.app.easyauth.io/tenantbackend/userinfo
+
+
+easyauth.config.baseuri=https://{your_subdomain}.app.easyauth.io
 
 ```
 
@@ -180,7 +181,6 @@ Consider the following sample code which fetches user profile from EasyAuth
 package com.easyauth.easyAuthExample.controller;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -203,12 +203,9 @@ public class UserRestController {
     }
 
     @GetMapping("/profile")
-    public String profile(@RegisteredOAuth2AuthorizedClient("easyauth") OAuth2AuthorizedClient authorizedClient) {
-        String resourceUri = "https://{your_subdomain}.app.easyauth.io/tenantbackend/api/profile";		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webflux</artifactId>
-		</dependency>
-
+    public String profile(@RegisteredOAuth2AuthorizedClient("easyauth") OAuth2AuthorizedClient authorizedClient,
+                          @Value("${easyauth.config.baseuri}") String baseUri) {
+        String resourceUri = baseUri + "/tenantbackend/api/profile";
         return webClient
                 .get()
                 .uri(resourceUri)
