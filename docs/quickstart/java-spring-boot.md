@@ -58,19 +58,19 @@ It is very easy to configure your application for authentication using spring se
 
 `Sample Properties File`
 ```
-spring.security.oauth2.client.registration.{registration_id}={registration_id}
-spring.security.oauth2.client.registration.{registration_id}.client-id={client_id}
-spring.security.oauth2.client.registration.{registration_id}.client-secret={client_secret}
-spring.security.oauth2.client.registration.{registration_id}.authorization-grant-type=authorization_code
-spring.security.oauth2.client.registration.{registration_id}.scope=openid
-spring.security.oauth2.client.registration.{registration_id}.client-name={client_name}
+spring.security.oauth2.client.registration.easyauth=easyauth
+spring.security.oauth2.client.registration.easyauth.client-id={client_id}
+spring.security.oauth2.client.registration.easyauth.client-secret={client_secret}
+spring.security.oauth2.client.registration.easyauth.authorization-grant-type=authorization_code
+spring.security.oauth2.client.registration.easyauth.scope=openid
+spring.security.oauth2.client.registration.easyauth.client-name={client_name}
 
 
-spring.security.oauth2.client.provider.{provider_id}.issuer-uri=https://{your_subdomain}.{app}.easyauth.io/tenantbackend
-spring.security.oauth2.client.provider.{provider_id}.authorization-uri=https://{your_subdomain}.{app}.easyauth.io/tenantbackend/oauth2/authorize
-spring.security.oauth2.client.provider.{provider_id}.token-uri=https://{your_subdomain}.{app}.easyauth.io/tenantbackend/oauth2/token
-spring.security.oauth2.client.provider.{provider_id}.redirect-uri={Redirect Uri such as http://127.0.0.1:8080/login/oauth2/code/easyauth}
-spring.security.oauth2.client.provider.{provider_id}.user-info-uri=https://{your_subdomain}.{app}.easyauth.io/tenantbackend/userinfo
+spring.security.oauth2.client.provider.easyauth.issuer-uri=https://{your_subdomain}.{app}.easyauth.io/tenantbackend
+spring.security.oauth2.client.provider.easyauth.authorization-uri=https://{your_subdomain}.{app}.easyauth.io/tenantbackend/oauth2/authorize
+spring.security.oauth2.client.provider.easyauth.token-uri=https://{your_subdomain}.{app}.easyauth.io/tenantbackend/oauth2/token
+spring.security.oauth2.client.provider.easyauth.redirect-uri={Redirect Uri such as http://127.0.0.1:8080/login/oauth2/code/easyauth}
+spring.security.oauth2.client.provider.easyauth.user-info-uri=https://{your_subdomain}.{app}.easyauth.io/tenantbackend/userinfo
 
 ```
 ---
@@ -119,6 +119,7 @@ Now let's add controller file to provide controllers for index page and profile 
 Here, We're using reactive `WebClient` from [Spring WebFlux](https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#spring-web-reactive) to send HTTP requests and receive HTTP response. 
 
 > Add the `spring-boot-starter-webflux` starter dependency in your maven project.
+
 ```xml
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -201,7 +202,7 @@ public class UserRestController {
     }
 
     @GetMapping("/profile")
-    public String profile(@RegisteredOAuth2AuthorizedClient({registration_id}) OAuth2AuthorizedClient authorizedClient) {
+    public String profile(@RegisteredOAuth2AuthorizedClient("easyauth") OAuth2AuthorizedClient authorizedClient) {
         String resourceUri = "https://{your_subdomain}.{app}.easyauth.io/tenantbackend/api/profile";		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
@@ -219,7 +220,5 @@ public class UserRestController {
 ```
 ---
 Here, We've created a `GetMapping` path for the index page `/` and a `GetMapping` path `/profile` that sends HTTP request for the profile details to the EasyAuth Api and returns the response.
-
-**Note** Make sure to add correct registration_id in the parameter of the function `public string profile()`
 
 ---
