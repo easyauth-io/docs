@@ -1,39 +1,30 @@
 # Get started with Java Spring Boot
 
-Learn how to authenticate users in a java spring boot application using EasyAuth.
+Learn how to authenticate users in a Java Spring Boot application using EasyAuth.
 
 ???+ abstract "TLDR: Try the sample Java-Spring-Boot project"
 
-	1. Sign in to [easyauth.io](https://easyauth.io) and create a new 'Registered Client' with redirect URI set to `http://127.0.0.1:8080/login/oauth2/code/easyauth`
+	1. Sign in to [easyauth.io](https://easyauth.io){target=_blank} and create a new 'Registered Client' with redirect URI set to `http://127.0.0.1:8080/login/oauth2/code/easyauth`
 	
-    2. Clone the sample app from [https://github.com/easyauth-io/easyauth-spring-boot-example](https://github.com/easyauth-io/easyauth-spring-boot-example)
+    2. Clone the sample app from [https://github.com/easyauth-io/easyauth-spring-boot-example](https://github.com/easyauth-io/easyauth-spring-boot-example){target=_blank}
 	
-	    `git clone git@github.com:easyauth-io/easyauth-spring-boot-example.git`
+	    `git clone https://github.com/easyauth-io/easyauth-spring-boot-example.git`
 	
-	3. Open the project in IntelliJ idea
+	3. Open the project in your favourite editor.
 	
-	4. Edit the `src/main/resources/application.properties` file and set the values from your 'Registered Client' that you created in step1 excluding the curly braces-{}.
+	4. Edit the `src/main/resources/application.properties` file and set the values from your 'Registered Client' that you created in step 1 in place of the curly braces - {}.
 	
-	5. Also edit `line 27 & 28` of `src/main/java/com/easyauth/easyAuthExample/controller/UserRestController.java` providing the correct values excluding curly braces-{}.
+	5. Also edit `line 27 & 28` of `src/main/java/com/easyauth/easyAuthExample/controller/UserRestController.java` providing the correct values in place of the curly braces - {}.
 	
-	6. Run the project and visit [http://127.0.0.1:8080](http://127.0.0.1:8080)
+	6. Run the project and visit [http://127.0.0.1:8080](http://127.0.0.1:8080){target=_blank}
 
 ## 1. Create a new Spring Boot Application	
 
-<!-- To create a new spring boot project from [https://start.spring.io](https://start.spring.io).
-    
-    1. Select Java 17 and maven build with depecdencies- Spring web and spring oauth2 client.
-    2. Click generate and the project zip file will be downloaded.
-
-## 2. Spring Security Configuration
-
-Configure a new bean name securityFilterChain  -->
-
-Generate a new spring boot web project from [https://start.spring.io](https://start.spring.io).
+Generate a new spring boot web project from [https://start.spring.io](https://start.spring.io){target=_blank}.
 
 Add the `spring-boot-starter-oauth2-client` starter in `pom.xml` file of the your Maven project, it provides all the necessary dependencies required to authenticate your application.
 
-``` xml
+``` xml title="pom.xml"
 <dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -54,10 +45,11 @@ Add the `spring-boot-starter-oauth2-client` starter in `pom.xml` file of the you
 
 ## 2. Configure application.properties file
 
-It is very easy to configure your application for authentication using spring security with EasyAuth. Edit your application's configuration file i.e `application.properties` file. You can also use `application.yml` file providing required syntax. Configure the OAUTH2 client and provider. Use credentials from your `Registered Client` that your created in [EasyAuth](https://easyauth.io).
+It is very easy to configure your application for authentication using spring security with EasyAuth. Edit your application's configuration file i.e `application.properties` file. You can also use `application.yml` file providing required syntax. Configure the Oauth2 client and provider. Use credentials from your `Registered Client` that your created in [EasyAuth](https://easyauth.io){target=_blank}.
 
-`Sample Properties File`
-```
+### Sample Properties File
+
+```bash title="src/main/resources/application.properties"
 spring.security.oauth2.client.registration.easyauth=easyauth
 spring.security.oauth2.client.registration.easyauth.client-id={client_id}
 spring.security.oauth2.client.registration.easyauth.client-secret={client_secret}
@@ -66,16 +58,17 @@ spring.security.oauth2.client.registration.easyauth.scope=openid
 spring.security.oauth2.client.registration.easyauth.client-name={client_name}
 
 
-spring.security.oauth2.client.provider.easyauth.issuer-uri=https://{your_subdomain}.{app}.easyauth.io/tenantbackend
-spring.security.oauth2.client.provider.easyauth.authorization-uri=https://{your_subdomain}.{app}.easyauth.io/tenantbackend/oauth2/authorize
-spring.security.oauth2.client.provider.easyauth.token-uri=https://{your_subdomain}.{app}.easyauth.io/tenantbackend/oauth2/token
+spring.security.oauth2.client.provider.easyauth.issuer-uri=https://{your_subdomain}.app.easyauth.io/tenantbackend
+spring.security.oauth2.client.provider.easyauth.authorization-uri=https://{your_subdomain}.app.easyauth.io/tenantbackend/oauth2/authorize
+spring.security.oauth2.client.provider.easyauth.token-uri=https://{your_subdomain}.app.easyauth.io/tenantbackend/oauth2/token
 spring.security.oauth2.client.provider.easyauth.redirect-uri={Redirect Uri such as http://127.0.0.1:8080/login/oauth2/code/easyauth}
-spring.security.oauth2.client.provider.easyauth.user-info-uri=https://{your_subdomain}.{app}.easyauth.io/tenantbackend/userinfo
+spring.security.oauth2.client.provider.easyauth.user-info-uri=https://{your_subdomain}.app.easyauth.io/tenantbackend/userinfo
 
 ```
+
 ---
 **NOTE** 
-Carefully use your credentials to provide `Client_Id` and `Client_Secret`. `Registration_Id` & `Provider_Id` can be anything as you wish, Or, You can put the name of OAUTH2 Api provider you're going to use there, in this case EasyAuth that is.
+Carefully use your credentials to provide `client-id` and `client-secret`.
  
 ---
 
@@ -83,7 +76,7 @@ Carefully use your credentials to provide `Client_Id` and `Client_Secret`. `Regi
 
 To add login using EasyAuth to your application, create a class to provide an instance of [SecurityFilterChain](https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/web/SecurityFilterChain.html) and add the `@EnableWebSecurity` and `@Configuration` annotations.
 
-``` java
+```java title="src/main/java/com/easyauth/easyAuthExample/config/Oauth2LoginSecurityConfig.java"
 package com.easyauth.easyAuthExample.config;
 
 import org.springframework.context.annotation.Bean;
@@ -107,28 +100,33 @@ public class Oauth2LoginSecurityConfig {
 
 }
 ```
+
 ---
-> **Here, Spring security is configured to require authentication on all the paths, you can customize it using the [HttpSecurity](https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/config/annotation/web/builders/HttpSecurity.html) instance as you wish.**
+> **Here, Spring Security is configured to require authentication on all the paths, you can customize it using the [HttpSecurity](https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/config/annotation/web/builders/HttpSecurity.html){target=_blank} instance as you wish.**
+
+Learn more about Spring Security Oauth configuration [here](https://docs.spring.io/spring-security/reference/servlet/oauth2/login/core.html){target=_blank}.
 
 ---
 
-## 4. Adding controller to get profile details
+## 4. Adding a controller to get profile details
 
 Now let's add controller file to provide controllers for index page and profile page to request the authenticated user details from EasyAuth resource server, using the access token.
 
 Here, We're using reactive `WebClient` from [Spring WebFlux](https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#spring-web-reactive) to send HTTP requests and receive HTTP response. 
 
-> Add the `spring-boot-starter-webflux` starter dependency in your maven project.
+### Add the `webflux` dependency in your maven project.
 
-```xml
+```xml title="pom.xml"
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
 ```
-Now, We first need to configure webClient instance.
-> Create a class to provide instance of `webClient`. Consider the following sample code.
- ``` java
+### Configure WebClient instance
+
+Create a class to provide instance of `WebClient`. Consider the following sample code.
+
+```java title="src/main/java/com/easyauth/easyAuthExample/config/WebClientConfig.java"
 package com.easyauth.easyAuthExample.config;
 
 import org.springframework.context.annotation.Bean;
@@ -171,12 +169,15 @@ public class WebClientConfig {
     }
 
 }
- ```
+```
 
- > Now, adding a Controller Class to configure REST API paths. Consider the following sample code.
+### Add a controller to fetch user profile 
+ 
+Consider the following sample code which fetches user profile from EasyAuth
 
- ```java
- package com.easyauth.easyAuthExample.controller;
+
+```java title="src/main/java/com/easyauth/easyAuthExample/controller/UserRestController.java"
+package com.easyauth.easyAuthExample.controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -203,7 +204,7 @@ public class UserRestController {
 
     @GetMapping("/profile")
     public String profile(@RegisteredOAuth2AuthorizedClient("easyauth") OAuth2AuthorizedClient authorizedClient) {
-        String resourceUri = "https://{your_subdomain}.{app}.easyauth.io/tenantbackend/api/profile";		<dependency>
+        String resourceUri = "https://{your_subdomain}.app.easyauth.io/tenantbackend/api/profile";		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
@@ -218,7 +219,8 @@ public class UserRestController {
     }
 }
 ```
+
 ---
-Here, We've created a `GetMapping` path for the index page `/` and a `GetMapping` path `/profile` that sends HTTP request for the profile details to the EasyAuth Api and returns the response.
+Here, We've created a `GetMapping` for the path `/profile` that fetches profile details to the EasyAuth Api and returns them as response.
 
 ---
