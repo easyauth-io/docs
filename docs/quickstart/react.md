@@ -40,20 +40,19 @@ The following command creates an app in the directory named `myapp`. Change `mya
     cd myapp
     ```
 
-## 2. Install react-oidc-context
+## 2. Install @easyauth.io/easyauth-react
 
-For this guide, we use the [`react-oidc-context`](https://www.npmjs.com/package/react-oidc-context){target=_blank} library which is based on [`oidc-client-ts`](https://www.npmjs.com/package/oidc-client-ts){target=_blank}
 
 === "npm"
 
     ``` bash
-    npm install oidc-client-ts react-oidc-context --save
+    npm install @easyauth.io/easyauth-react --save
     ```
 
 === "yarn"
 
     ``` bash
-    yarn add oidc-client-ts react-oidc-context
+    yarn add @easyauth.io/easyauth-react
     ```
 
 
@@ -78,35 +77,16 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { AuthProvider } from "react-oidc-context";
-import { WebStorageStateStore } from 'oidc-client-ts';
+import { EasyauthProvider } from "@easyauth.io/easyauth-react";
 
+// ================ Wrap <App> with  <EasyauthProvider> ================= //
 
-// ================ Initialize Oidc config ================= //
-
-const onSigninCallback = () => {
-     window.history.replaceState(
-         {},
-         document.title,
-         window.location.pathname
-     )
-}
-const oidcConfig = {
-  authority: process.env.REACT_APP_EASYAUTH_APP_URL + "/tenantbackend",
-  client_id: process.env.REACT_APP_EASYAUTH_CLIENT_ID,
-  redirect_uri: process.env.REACT_APP_EASYAUTH_REDIRECT_URL,
-  onSigninCallback: onSigninCallback,
-  userStore: new WebStorageStateStore({ store: window.localStorage })
-};
-
-// ================ Wrap <App> with  <AuthProvider> ================= //
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <AuthProvider {...oidcConfig}>
+    <EasyauthProvider>
       <App />
-    </AuthProvider>
+    </EasyauthProvider>
   </React.StrictMode>
 );
 
@@ -120,58 +100,71 @@ reportWebVitals();
 ## 5. Edit `src/App.js` file
 
 ``` js title="src/App.js"
-import logo from './logo.svg';
-import './App.css';
-import { useAuth } from "react-oidc-context";
+import logo from "./logo.svg";
+import "./App.css";
+import {
+  SignedIn,
+  SignedOut,
+  UserButton,
+  UserProfile,
+  useEasyauth,
+  useUser,
+} from "@easyauth.io/easyauth-react";
 
 function App() {
-  const auth = useAuth();
+  const auth = useEasyauth();
+  const { isAuthenticated, user, isLoading } = useUser();
 
   switch (auth.activeNavigator) {
     case "signinSilent":
-    return <div>Signing you in...</div>;
+      return <div>Signing you in...</div>;
     case "signoutRedirect":
-    return <div>Signing you out...</div>;
+      return <div>Signing you out...</div>;
   }
+
   if (auth.isLoading) {
     return <h1>Loading...</h1>;
   }
+
   if (auth.error) {
     return <div>Oops... {auth.error.message}</div>;
   }
-  
-  if (auth.isAuthenticated) {
-    return (
-      <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        
-        <p>Hello {auth.user?.profile.sub}{" "}</p>
-        
-        <button style={{padding: "0.2em 1em", "fontSize":"1em", "cursor": "pointer"}} onClick={() => {auth.removeUser()}}>
-        Log out
-        </button>
-        
-      </header>
-      </div>
-    );
-  }
-    
+
   return (
-    <div className="App">
-    <header className="App-header">
-    <img src={logo} className="App-logo" alt="logo" />
-
-    <button style={{padding: "0.2em 1em", "fontSize":"1em", "cursor": "pointer"}} onClick={() => void auth.signinRedirect()}>
-    Log in
-    </button>
-
-    </header>
-    </div>
+    <>
+      <SignedIn>
+        <div className="App">
+          <header className="App-header">
+            <div className="Usr-btn">
+              <UserButton />
+            </div>
+            <img src={logo} className="App-logo" alt="logo" />
+            <p>Hello {user.email} </p>
+          </header>
+        </div>
+      </SignedIn>
+      <SignedOut>
+        <div className="App">
+          <header className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <p>
+              Edit <code>src/App.js</code> and save to reload.
+            </p>
+            <button
+              style={{padding: "0.2em 1em", "fontSize":"1em", "cursor": "pointer"}}
+              onClick={() => void auth.signinRedirect()}
+            >
+              Log in
+            </button>
+          </header>
+        </div>
+      </SignedOut>
+    </>
   );
 }
-    
+
 export default App;
+
 ```
 
 ## Test the App
@@ -206,4 +199,4 @@ Run the application on `127.0.0.1`. Then open the URL [http://127.0.0.1:3000](ht
 
 ## Next Steps
 
-Query user information from EasyAuth through the API. See the example code [here](https://github.com/easyauth-io/easyauth-react-example/blob/main/src/Profile.jsx){target=_blank}.
+Query user information from EasyAuth is given by useUser() hook.
