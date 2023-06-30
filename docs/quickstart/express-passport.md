@@ -12,9 +12,9 @@ Learn how to authenticate users through Express app and Passport.js using EasyAu
 
     3. Edit `.env` and set the parameters from your 'Registered Client' that you created in Step 1
 
-    5. Run `npm install` followed by `npm run start`
+    4. Run `npm install` followed by `npm run start`
 
-    6. Visit [http://127.0.0.1:3000/auth/easyauth/login](http://127.0.0.1:3000/auth/easyauth/login){target=_blank}
+    5. Visit [http://127.0.0.1:3000/auth/easyauth/login](http://127.0.0.1:3000/auth/easyauth/login){target=_blank}
 
 ## 1. Create a new Nodejs Application
 
@@ -53,9 +53,9 @@ PORT=3000
 Create a new file named `strategy.js` for initializing EasyAuth strategy and edit it as follows:
 
 ```js title="strategy.js"
-const passport = require('passport');
-const EasyAuthStrategy = require('@easyauth.io/passport-easyauth');
-require('dotenv').config();
+const passport = require("passport");
+const EasyAuthStrategy = require("@easyauth.io/passport-easyauth");
+require("dotenv").config();
 
 const PORT = process.env.PORT;
 passport.use(
@@ -78,19 +78,19 @@ passport.use(
 Create a new file named `index.js` and edit it as follows:
 
 ```js title="index.js"
-const express = require('express');
-const session = require('express-session');
-const passport = require('passport');
+const express = require("express");
+const session = require("express-session");
+const passport = require("passport");
 const app = express();
 
-require('./strategy');
-require('dotenv').config();
+require("./strategy");
+require("dotenv").config();
 
 const PORT = process.env.PORT;
 
 app.use(
   session({
-    secret: 'your secret key',
+    secret: "your secret key",
     resave: false,
     saveUninitialized: false,
   })
@@ -104,60 +104,60 @@ const isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect('/auth/easyauth/login');
+  res.redirect("/auth/easyauth/login");
 };
 
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
-app.get('/', (req, res) => {
-  res.send('EasyAuth Passport Home Page');
+app.get("/", (req, res) => {
+  res.send("EasyAuth Passport Home Page");
 });
 
 //Login Route
 app.get(
-  '/auth/easyauth/login',
-  passport.authenticate('easyauth', {scope: 'openid'})
+  "/auth/easyauth/login",
+  passport.authenticate("easyauth", {scope: "openid"})
 );
 
 //Callback Route
 app.get(
-  '/auth/easyauth/callback',
-  passport.authenticate('easyauth', {failureRedirect: '/failed'}),
+  "/auth/easyauth/callback",
+  passport.authenticate("easyauth", {failureRedirect: "/failed"}),
   (req, res) => {
-    res.redirect('/protectedroute');
+    res.redirect("/protectedroute");
   }
 );
 
 //Logout Route
-app.get('/auth/easyauth/logout', (req, res) => {
+app.get("/auth/easyauth/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) {
       console.log(err);
     } else {
-      res.send('Successfully Logged out.');
+      res.send("Successfully Logged out.");
     }
   });
 });
 
 //Failed Route
-app.get('/failed', (req, res) => {
-  res.send('Login Failed');
+app.get("/failed", (req, res) => {
+  res.send("Login Failed");
 });
 
 //Protected success Route
-app.get('/protectedroute', isAuthenticated, (req, res) => {
+app.get("/protectedroute", isAuthenticated, (req, res) => {
   res.send(`User: ${JSON.stringify(req.user)}`);
 });
 
 //Get EasyAuth profile
-app.get('/easyauthprofile', isAuthenticated, async (req, res) => {
+app.get("/easyauthprofile", isAuthenticated, async (req, res) => {
   try {
     const accessToken = req.user.tokenset.access_token;
     const response = await fetch(
-      new URL('/tenantbackend/api/profile', process.env.EASYAUTH_DISCOVERY_URL),
+      new URL("/tenantbackend/api/profile", process.env.EASYAUTH_DISCOVERY_URL),
       {
-        method: 'GET',
+        method: "GET",
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -167,10 +167,10 @@ app.get('/easyauthprofile', isAuthenticated, async (req, res) => {
       const userInfo = await response.json();
       res.send(JSON.stringify(userInfo));
     } else {
-      res.send('Failed to fetch User Info.').status(response.status);
+      res.send("Failed to fetch User Info.").status(response.status);
     }
   } catch (error) {
-    res.send('Failed to fetch User Info').status(500);
+    res.send("Failed to fetch User Info").status(500);
   }
 });
 
