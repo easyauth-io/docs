@@ -10,6 +10,7 @@ EasyAuth provides end-to-end user authentication and user management that can be
 - [:material-nodejs: **Express Passport.js**](./quickstart/express-passport.md)
 - [:simple-nextdotjs: **Next.js & next-auth**](./quickstart/easyauth-next-auth.md)
 - [:simple-spring: **Java Spring Boot**](./quickstart/java-spring-boot.md)
+- [:simple-svelte: **Svelte/Sveltekit**](./quickstart/svelte.md)
 - :simple-javascript: **JavaScript**
 
 </div>
