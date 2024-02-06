@@ -1,0 +1,26 @@
+:root {
+    --md-primary-fg-color:        #704da1;
+    --md-primary-fg-color--light: #f5e5ff;
+    --md-primary-fg-color--dark:  #4c0093b7;
+}
+
+
+.grid.cards>ol>li, .md-typeset .grid.cards>ul>li, .md-typeset .grid>.card {
+    border: .05rem solid var(--md-default-fg-color--lightest);
+    border-radius: .1rem;
+    display: block;
+    margin: 0;
+    padding: .8rem;
+    transition: border .25s,box-shadow .25s;
+}
+
+.grid.cards>ul {
+    display: contents;
+}
+
+.grid {
+    grid-gap: .4rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(16rem,1fr));
+    margin: 1em 0;
+}
