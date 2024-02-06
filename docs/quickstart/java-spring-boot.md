@@ -48,6 +48,8 @@ It is very easy to configure your application for authentication using spring se
 ### Sample Properties File
 
 ```bash title="src/main/resources/application.properties"
+server.forward-headers-strategy=FRAMEWORK
+
 spring.security.oauth2.client.registration.easyauth=easyauth
 spring.security.oauth2.client.registration.easyauth.client-id={client_id}
 spring.security.oauth2.client.registration.easyauth.client-secret={client_secret}
